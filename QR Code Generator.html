@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="logo.png">
+  <meta name="description" content="This is a user-friendly QR Code Generator that lets you quickly create and share QR codes for any URL, all in a sleek, dark-themed design with smooth animations.">
+  <meta name="author" content="Tech Rootify">
+  <title>QR Code Generator</title>
+  <style>
+    /* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0a192f; /* Dark theme background */
+    color: #ccd6f6; /* Light text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .container {
+    text-align: center;
+    background: #112240; /* Dark container background */
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(100, 255, 218, 0.1);
+    animation: fadeIn 1s ease-in-out;
+    max-width: 500px;
+    width: 90%;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #64ffda; /* Neon accent color */
+    text-shadow: 0 3px 8px rgba(100, 255, 218, 0.8);
+  }
+  
+  p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #ccd6f6; /* Light text color */
+  }
+  
+  .input-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  
+  input[type="text"] {
+    width: 70%;
+    padding: 12px;
+    border: 2px solid #64ffda; /* Neon accent border */
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    background: #0a192f; /* Dark input background */
+    color: #ccd6f6; /* Light text color */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  input[type="text"]:focus {
+    border-color: #52e6c0; /* Neon accent hover color */
+    box-shadow: 0 0 8px rgba(82, 230, 192, 0.8);
+  }
+  
+  button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #64ffda, #52e6c0); /* Neon gradient */
+    color: #0a192f; /* Dark text color */
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
+  
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+    background: linear-gradient(135deg, #52e6c0, #64ffda); /* Neon gradient hover */
+  }
+  
+  .qr-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #0a192f; /* Dark container background */
+    border-radius: 10px;
+    border: 2px solid #64ffda; /* Neon accent border */
+    overflow: hidden;
+    animation: slideIn 0.5s ease-in-out;
+  }
+  
+  .lighting-effect {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(100, 255, 218, 0.2), transparent 70%); /* Neon lighting effect */
+    animation: rotateLight 10s linear infinite;
+    z-index: 1;
+  }
+  
+  #qrcode {
+    position: relative;
+    z-index: 2;
+    animation: popIn 0.5s ease-in-out;
+  }
+  
+  .share-section {
+    margin-top: 1.5rem;
+    display: none;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes popIn {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes rotateLight {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      width: 90%;
+      padding: 1.5rem;
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  
+    input[type="text"] {
+      width: 60%;
+    }
+  
+    button {
+      padding: 10px 20px;
+    }
+  }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>QR Code Generator</h1>
+    <p>Enter a URL to generate a QR code instantly!</p>
+    <div class="input-group">
+      <input type="text" id="urlInput" placeholder="Enter URL here...">
+      <button onclick="generateQR()">Generate QR Code</button>
+    </div>
+    <div class="qr-container" id="qrContainer">
+      <div class="lighting-effect"></div>
+      <div id="qrcode"></div>
+    </div>
+    <div class="share-section" id="shareSection">
+      <button id="copyBtn" onclick="copyQRToClipboard()">
+        <i class="fas fa-copy"></i> Copy QR Code
+      </button>
+      <button id="shareBtn" onclick="shareQR()">
+        <i class="fas fa-share"></i> Share QR Code
+      </button>
+    </div>
+  </div>
+
+  <!-- QRCode.js Library -->
+  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script>
+    let qrCodeInstance = null;
+
+function generateQR() {
+  const url = document.getElementById('urlInput').value;
+  const qrcodeDiv = document.getElementById('qrcode');
+  const shareSection = document.getElementById('shareSection');
+
+  // Clear previous QR code
+  qrcodeDiv.innerHTML = '';
+
+  if (url) {
+    // Generate new QR code
+    qrCodeInstance = new QRCode(qrcodeDiv, {
+      text: url,
+      width: 200,
+      height: 200,
+      colorDark: "#64ffda", // Neon accent color
+      colorLight: "#0a192f", // Dark background
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Show share buttons
+    shareSection.style.display = 'flex';
+    qrcodeDiv.style.animation = 'popIn 0.5s ease-in-out';
+  } else {
+    alert('Please enter a valid URL!');
+  }
+}
+
+function copyQRToClipboard() {
+  const qrcodeCanvas = document.querySelector('#qrcode canvas');
+  if (qrcodeCanvas) {
+    qrcodeCanvas.toBlob((blob) => {
+      const item = new ClipboardItem({ 'image/png': blob });
+      navigator.clipboard.write([item]).then(() => {
+        alert('QR code copied to clipboard!');
+      }).catch(() => {
+        alert('Failed to copy QR code to clipboard.');
+      });
+    });
+  } else {
+    alert('No QR code generated yet!');
+  }
+}
+
+function shareQR() {
+  const qrcodeCanvas = document.querySelector('#qrcode canvas');
+  if (qrcodeCanvas) {
+    qrcodeCanvas.toBlob((blob) => {
+      const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+      if (navigator.share) {
+        navigator.share({
+          title: 'QR Code',
+          files: [file],
+        }).then(() => {
+          console.log('QR code shared successfully!');
+        }).catch(() => {
+          alert('Failed to share QR code.');
+        });
+      } else {
+        alert('Web Share API is not supported in your browser.');
+      }
+    });
+  } else {
+    alert('No QR code generated yet!');
+  }
+}
+  </script>
+</body>
+</html>

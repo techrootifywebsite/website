@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="logo.png">
+  <meta name="description" content="A professional number converter tool created by Tech Rootify, supporting conversions between Decimal, Binary, Hexadecimal, and Octal.">
+  <meta name="author" content="Tech Rootify">
+  <title>Number Converter</title>
+  <style>
+    /* Reset & General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0a192f;
+    color: #ccd6f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 600px;
+    width: 100%;
+    margin: 0;
+    padding: 30px;
+    background: #112240;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(100, 255, 218, 0.1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(100, 255, 218, 0.4);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #64ffda;
+    margin-bottom: 10px;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 3px 8px rgba(100, 255, 218, 0.8);
+  }
+  
+  .author {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #ccd6f6;
+    margin-bottom: 20px;
+  }
+  
+  .author a {
+    color: #64ffda;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  .author a:hover {
+    color: #52e6c0;
+    text-shadow: 0 3px 6px rgba(82, 230, 192, 0.8);
+    transform: translateY(-3px);
+  }
+  
+  /* Form */
+  .form {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ccd6f6;
+    font-weight: 500;
+  }
+  
+  select,
+  input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #64ffda;
+    border-radius: 6px;
+    background: #0a192f;
+    color: #ccd6f6;
+    font-size: 1rem;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  select:focus,
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #52e6c0;
+    box-shadow: 0 0 8px rgba(82, 230, 192, 0.8);
+    transform: scale(1.02);
+  }
+  
+  button {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #64ffda, #52e6c0);
+    color: #0a192f;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, filter 0.3s ease;
+    text-shadow: 0 2px 5px rgba(255, 255, 255, 0.5);
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+    background: linear-gradient(135deg, #52e6c0, #64ffda);
+    filter: brightness(1.2);
+  }
+  
+  /* Output */
+  .output {
+    display: none;
+    margin-top: 20px;
+    background: #0a192f;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 5px solid #64ffda;
+    animation: fadeIn 0.5s ease;
+    box-shadow: 0 3px 10px rgba(100, 255, 218, 0.1);
+  }
+  
+  .result {
+    margin-bottom: 5px;
+    color: #ccd6f6;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 15px 10px;
+    margin-top: 20px;
+    background: #112240;
+    font-size: 0.9rem;
+    border-top: 2px solid #64ffda;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+    color: #ccd6f6;
+    border-radius: 20px;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  footer:hover {
+    background: #0a192f;
+    transform: translateY(-3px);
+    box-shadow: 0 3px 20px rgba(100, 255, 218, 0.2);
+  }
+  
+  footer a {
+    color: #64ffda;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  footer a:hover {
+    color: #52e6c0;
+    text-shadow: 0 3px 6px rgba(82, 230, 192, 0.8);
+    transform: translateY(-3px);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    body {
+      padding: 20px;
+    }
+  
+    .container {
+      max-width: 90%;
+      padding: 20px;
+    }
+  
+    h1 {
+      font-size: 1.8rem;
+    }
+  
+    .author {
+      font-size: 0.85rem;
+    }
+  
+    footer {
+      font-size: 0.85rem;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    input[type="text"],
+    button {
+      width: 100%;
+      font-size: 1rem;
+    }
+  
+    button {
+      padding: 12px;
+    }
+  
+    footer {
+      font-size: 0.8rem;
+    }
+  }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Number Converter</h1>
+    <p class="author">
+      <b>Designed and developed by</b>
+      <a href="https://www.instagram.com/techrootify/" target="_blank" rel="noopener noreferrer">
+        Tech Rootify
+      </a>
+    </p>
+    <br>
+    <div class="form">
+      <label for="inputType">Select the type of input:</label>
+      <select id="inputType">
+        <option value="decimal">Decimal</option>
+        <option value="binary">Binary</option>
+        <option value="hexadecimal">Hexadecimal</option>
+        <option value="octal">Octal</option>
+      </select>
+      <br><br>
+      <div id="inputDiv">
+        <label for="inputNumber">Enter a number:</label>
+        <input type="text" id="inputNumber" placeholder="Enter your number here">
+      </div>
+      <button onclick="convert()">Convert</button>
+    </div>
+    <div id="output" class="output"></div>
+    <footer>
+      <p>&copy; 2025
+        <a href="https://www.techrootify.com/" target="_blank" rel="noopener noreferrer">
+          Tech Rootify
+        </a>. All rights reserved.
+      </p>
+    </footer>
+  </div>
+  <script>
+    function convert() {
+    var inputType = document.getElementById("inputType").value;
+    var inputNumber = document.getElementById("inputNumber").value;
+    var outputDiv = document.getElementById("output");
+    var output = "";
+
+    if (inputNumber === "") {
+        alert("Please enter a number.");
+        return;
+    }
+
+    if (inputType === "decimal") {
+        output += "<div class='result'>Binary representation: " + decimal_to_binary(inputNumber) + "</div>";
+        output += "<div class='result'>Hexadecimal representation: " + decimal_to_hexadecimal(inputNumber) + "</div>";
+        output += "<div class='result'>Octal representation: " + decimal_to_octal(inputNumber) + "</div>";
+    } else if (inputType === "binary") {
+        output += "<div class='result'>Decimal representation: " + binary_to_decimal(inputNumber) + "</div>";
+        output += "<div class='result'>Hexadecimal representation: " + binary_to_hexadecimal(inputNumber) + "</div>";
+        output += "<div class='result'>Octal representation: " + binary_to_octal(inputNumber) + "</div>";
+    } else if (inputType === "hexadecimal") {
+        output += "<div class='result'>Decimal representation: " + hexadecimal_to_decimal(inputNumber) + "</div>";
+        output += "<div class='result'>Binary representation: " + hexadecimal_to_binary(inputNumber) + "</div>";
+        output += "<div class='result'>Octal representation: " + hexadecimal_to_octal(inputNumber) + "</div>";
+    } else if (inputType === "octal") {
+        output += "<div class='result'>Decimal representation: " + octal_to_decimal(inputNumber) + "</div>";
+        output += "<div class='result'>Binary representation: " + octal_to_binary(inputNumber) + "</div>";
+        output += "<div class='result'>Hexadecimal representation: " + octal_to_hexadecimal(inputNumber) + "</div>";
+    }
+
+    outputDiv.innerHTML = output;
+    outputDiv.style.display = "block";
+}
+
+function decimal_to_binary(decimal) {
+    return parseInt(decimal).toString(2);
+}
+
+function decimal_to_hexadecimal(decimal) {
+    return parseInt(decimal).toString(16);
+}
+
+function decimal_to_octal(decimal) {
+    return parseInt(decimal).toString(8);
+}
+
+function binary_to_decimal(binary) {
+    return parseInt(binary, 2).toString();
+}
+
+function binary_to_hexadecimal(binary) {
+    return parseInt(binary, 2).toString(16);
+}
+
+function binary_to_octal(binary) {
+    return parseInt(binary, 2).toString(8);
+}
+
+function hexadecimal_to_decimal(hexadecimal) {
+    return parseInt(hexadecimal, 16).toString();
+}
+
+function hexadecimal_to_binary(hexadecimal) {
+    return parseInt(hexadecimal, 16).toString(2);
+}
+
+function hexadecimal_to_octal(hexadecimal) {
+    return parseInt(hexadecimal, 16).toString(8);
+}
+
+function octal_to_decimal(octal) {
+    return parseInt(octal, 8).toString();
+}
+
+function octal_to_binary(octal) {
+    return parseInt(octal, 8).toString(2);
+}
+
+function octal_to_hexadecimal(octal) {
+    return parseInt(octal, 8).toString(16);
+}
+
+  </script>
+</body>
+</html>
