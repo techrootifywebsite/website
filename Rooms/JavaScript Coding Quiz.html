@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://raw.githubusercontent.com/techrootifywebsite/website/refs/heads/main/logo.png">
+  <title>JavaScript Coding Quiz</title>
+  <link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>JavaScript Coding Quiz</h1>
+    <div id="quiz">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+    <div class="btn-container">
+      <button class="prev-btn hide" id="prev-btn" onclick="prevQuestion()">Previous</button>
+      <button class="skip-btn" id="skip-btn" onclick="nextQuestion(true)">Skip</button>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next</button>
+      <button class="submit-btn hide" id="submit-btn" onclick="submitQuiz()">Submit</button>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="try-again-container">
+      <button class="try-again-btn hide" id="try-again-btn" onclick="restartQuiz()">Try Again</button>
+      <button class="play-again-btn hide" id="play-again-btn" onclick="restartQuiz()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. What is the output of `typeof null` in JavaScript?",
+        options: ["A) 'object'", "B) 'null'", "C) 'undefined'", "D) 'boolean'"],
+        answer: "A"
+      },
+      {
+        question: "2. What does `let x = 5; let y = x++; console.log(y);` output?",
+        options: ["A) 5", "B) 6", "C) undefined", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "3. What is the result of `0 == '0'` and `0 === '0'`?",
+        options: ["A) true, true", "B) true, false", "C) false, true", "D) false, false"],
+        answer: "B"
+      },
+      {
+        question: "4. What does `let arr = [1, 2, 3]; arr[10] = 99; console.log(arr.length);` output?",
+        options: ["A) 3", "B) 10", "C) 11", "D) 99"],
+        answer: "C"
+      },
+      {
+        question: "5. What is the output of `console.log(1 + '2' + '2');`?",
+        options: ["A) '122'", "B) '32'", "C) 5", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "6. What does `console.log([] + []);` output?",
+        options: ["A) '[]'", "B) 'undefined'", "C) ''", "D) NaN"],
+        answer: "C"
+      },
+      {
+        question: "7. What is the result of `let a = 10; let b = a; a = 20; console.log(b);`?",
+        options: ["A) 10", "B) 20", "C) undefined", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "8. What does `console.log(typeof NaN);` output?",
+        options: ["A) 'number'", "B) 'NaN'", "C) 'undefined'", "D) 'string'"],
+        answer: "A"
+      },
+      {
+        question: "9. What is the output of `let x = 1; if (function f() {}) { x += typeof f; } console.log(x);`?",
+        options: ["A) '1undefined'", "B) '1function'", "C) '1object'", "D) '1number'"],
+        answer: "A"
+      },
+      {
+        question: "10. What does `console.log(!!'false' == !!'true');` output?",
+        options: ["A) true", "B) false", "C) undefined", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "11. What is the result of `console.log(1 < 2 < 3); console.log(3 > 2 > 1);`?",
+        options: ["A) true, true", "B) true, false", "C) false, true", "D) false, false"],
+        answer: "B"
+      },
+      {
+        question: "12. What does `let a = [1, 2, 3]; let b = a; b.push(4); console.log(a);` output?",
+        options: ["A) [1, 2, 3]", "B) [1, 2, 3, 4]", "C) [4]", "D) undefined"],
+        answer: "B"
+      },
+      {
+        question: "13. What is the output of `console.log(typeof undefined == typeof NULL);`?",
+        options: ["A) true", "B) false", "C) undefined", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "14. What does `console.log(1 + +'2' + '2');` output?",
+        options: ["A) '122'", "B) '32'", "C) '14'", "D) '322'"],
+        answer: "B"
+      },
+      {
+        question: "15. What is the result of `let x = 1; let y = 2; console.log(x, y); [x, y] = [y, x]; console.log(x, y);`?",
+        options: ["A) 1 2, 1 2", "B) 1 2, 2 1", "C) 2 1, 1 2", "D) 2 1, 2 1"],
+        answer: "B"
+      },
+      {
+        question: "16. What does `console.log(typeof typeof 1);` output?",
+        options: ["A) 'number'", "B) 'string'", "C) 'undefined'", "D) 'object'"],
+        answer: "B"
+      },
+      {
+        question: "17. What is the output of `console.log(1 + '1' - 1);`?",
+        options: ["A) 10", "B) 11", "C) 0", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "18. What does `console.log([] == ![]);` output?",
+        options: ["A) true", "B) false", "C) undefined", "D) NaN"],
+        answer: "A"
+      },
+      {
+        question: "19. What is the result of `let a = 10; function foo() { console.log(a); let a = 20; } foo();`?",
+        options: ["A) 10", "B) 20", "C) undefined", "D) ReferenceError"],
+        answer: "D"
+      },
+      {
+        question: "20. What does `console.log(+'1' + '1' + '1');` output?",
+        options: ["A) '111'", "B) '3'", "C) 111", "D) '21'"],
+        answer: "A"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const quizContainer = document.getElementById("quiz");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultDiv = document.getElementById("result");
+    const tryAgainBtn = document.getElementById("try-again-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+
+    function displayQuestion() {
+      const question = questions[currentQuestionIndex];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <p>${question.question}</p>
+          <div class="options">
+            ${question.options.map(option => `
+              <label><input type="radio" name="q${currentQuestionIndex + 1}" value="${option[0]}"> ${option}</label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      // Show/hide buttons
+      prevBtn.classList.toggle("hide", currentQuestionIndex === 0);
+      nextBtn.classList.toggle("hide", currentQuestionIndex === questions.length - 1);
+      submitBtn.classList.toggle("hide", currentQuestionIndex !== questions.length - 1);
+    }
+
+    function nextQuestion(isSkip = false) {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (!isSkip && !selectedOption) {
+        alert("Please select an option or click Skip!");
+        return;
+      }
+
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+      showResult();
+    }
+
+    function showResult() {
+      quizContainer.innerHTML = "";
+      prevBtn.classList.add("hide");
+      nextBtn.classList.add("hide");
+      skipBtn.classList.add("hide");
+      submitBtn.classList.add("hide");
+      resultDiv.innerHTML = `You scored ${score} out of ${questions.length}. ${score >= 15 ? "🎉 Congratulations!" : "😢 Better luck next time!"}`;
+
+      // Show "Play Again" button if the user scored 20/20, otherwise show "Try Again"
+      if (score === questions.length) {
+        playAgainBtn.classList.remove("hide");
+        tryAgainBtn.classList.add("hide");
+      } else {
+        tryAgainBtn.classList.remove("hide");
+        playAgainBtn.classList.add("hide");
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      resultDiv.innerHTML = "";
+      tryAgainBtn.classList.add("hide");
+      playAgainBtn.classList.add("hide");
+      displayQuestion();
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+</body>
+</html>
