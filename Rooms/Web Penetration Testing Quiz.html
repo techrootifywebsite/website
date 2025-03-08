@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://raw.githubusercontent.com/techrootifywebsite/website/refs/heads/main/logo.png">
+  <title>Web Penetration Testing Quiz</title>
+  <link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Web Penetration Testing Quiz</h1>
+    <div id="quiz">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+    <div class="btn-container">
+      <button class="prev-btn hide" id="prev-btn" onclick="prevQuestion()">Previous</button>
+      <button class="skip-btn" id="skip-btn" onclick="nextQuestion(true)">Skip</button>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next</button>
+      <button class="submit-btn hide" id="submit-btn" onclick="submitQuiz()">Submit</button>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="try-again-container">
+      <button class="try-again-btn hide" id="try-again-btn" onclick="restartQuiz()">Try Again</button>
+      <button class="play-again-btn hide" id="play-again-btn" onclick="restartQuiz()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. What is the primary goal of web penetration testing?",
+        options: [
+          "A) To fix all vulnerabilities automatically",
+          "B) To identify and exploit security weaknesses in a web application",
+          "C) To improve the website's design",
+          "D) To monitor website traffic"
+        ],
+        answer: "B"
+      },
+      {
+        question: "2. Which tool is commonly used for scanning web vulnerabilities?",
+        options: [
+          "A) Wireshark",
+          "B) Nmap",
+          "C) Burp Suite",
+          "D) Metasploit"
+        ],
+        answer: "C"
+      },
+      {
+        question: "3. What does SQL injection target?",
+        options: [
+          "A) The web server's operating system",
+          "B) The database connected to the web application",
+          "C) The user's browser",
+          "D) The network firewall"
+        ],
+        answer: "B"
+      },
+      {
+        question: "4. Which HTTP method is most commonly associated with retrieving data from a web server?",
+        options: [
+          "A) POST",
+          "B) GET",
+          "C) PUT",
+          "D) DELETE"
+        ],
+        answer: "B"
+      },
+      {
+        question: "5. What is Cross-Site Scripting (XSS)?",
+        options: [
+          "A) A vulnerability that allows attackers to inject malicious scripts into web pages",
+          "B) A method to bypass firewalls",
+          "C) A type of SQL injection",
+          "D) A way to encrypt web traffic"
+        ],
+        answer: "A"
+      },
+      {
+        question: "6. Which of the following is NOT a type of XSS attack?",
+        options: [
+          "A) Reflected XSS",
+          "B) Stored XSS",
+          "C) DOM-based XSS",
+          "D) Blind XSS"
+        ],
+        answer: "D"
+      },
+      {
+        question: "7. What is the purpose of a CSRF (Cross-Site Request Forgery) attack?",
+        options: [
+          "A) To steal user credentials",
+          "B) To execute unauthorized actions on behalf of a logged-in user",
+          "C) To inject malicious SQL queries",
+          "D) To overload the web server"
+        ],
+        answer: "B"
+      },
+      {
+        question: "8. Which of the following is a common way to prevent SQL injection?",
+        options: [
+          "A) Using parameterized queries",
+          "B) Disabling JavaScript",
+          "C) Encrypting the database",
+          "D) Blocking all HTTP POST requests"
+        ],
+        answer: "A"
+      },
+      {
+        question: "9. What is the purpose of a 'man-in-the-middle' (MITM) attack in web penetration testing?",
+        options: [
+          "A) To intercept and manipulate communication between two parties",
+          "B) To brute-force login credentials",
+          "C) To overload the web server with requests",
+          "D) To inject malicious scripts into a web page"
+        ],
+        answer: "A"
+      },
+      {
+        question: "10. Which tool is used for brute-forcing web application login pages?",
+        options: [
+          "A) Hydra",
+          "B) Nmap",
+          "C) Wireshark",
+          "D) Nikto"
+        ],
+        answer: "A"
+      },
+      {
+        question: "11. What is the purpose of a 'directory traversal' attack?",
+        options: [
+          "A) To gain unauthorized access to files and directories on the web server",
+          "B) To inject malicious scripts into a web page",
+          "C) To overload the web server with requests",
+          "D) To bypass firewalls"
+        ],
+        answer: "A"
+      },
+      {
+        question: "12. Which header is used to prevent Clickjacking attacks?",
+        options: [
+          "A) X-Frame-Options",
+          "B) Content-Security-Policy",
+          "C) Strict-Transport-Security",
+          "D) X-XSS-Protection"
+        ],
+        answer: "A"
+      },
+      {
+        question: "13. What is the purpose of a 'session hijacking' attack?",
+        options: [
+          "A) To steal a user's session cookie and impersonate them",
+          "B) To inject malicious SQL queries",
+          "C) To overload the web server",
+          "D) To bypass firewalls"
+        ],
+        answer: "A"
+      },
+      {
+        question: "14. Which vulnerability occurs when user input is directly included in web pages without proper sanitization?",
+        options: [
+          "A) SQL Injection",
+          "B) XSS",
+          "C) CSRF",
+          "D) File Inclusion"
+        ],
+        answer: "B"
+      },
+      {
+        question: "15. What is the primary purpose of a 'web application firewall' (WAF)?",
+        options: [
+          "A) To block malicious traffic and protect against web vulnerabilities",
+          "B) To scan for vulnerabilities in the web application",
+          "C) To encrypt web traffic",
+          "D) To monitor user activity"
+        ],
+        answer: "A"
+      },
+      {
+        question: "16. Which of the following is a common tool for fuzzing web applications?",
+        options: [
+          "A) OWASP ZAP",
+          "B) Nessus",
+          "C) Wfuzz",
+          "D) Nikto"
+        ],
+        answer: "C"
+      },
+      {
+        question: "17. What is the purpose of a 'security misconfiguration' vulnerability?",
+        options: [
+          "A) It occurs when security settings are not properly configured, exposing the application to attacks",
+          "B) It allows attackers to inject malicious scripts into web pages",
+          "C) It enables brute-forcing of login credentials",
+          "D) It overloads the web server with requests"
+        ],
+        answer: "A"
+      },
+      {
+        question: "18. Which of the following is a common method to test for CSRF vulnerabilities?",
+        options: [
+          "A) Sending crafted requests without proper tokens",
+          "B) Injecting malicious SQL queries",
+          "C) Overloading the web server with requests",
+          "D) Intercepting and modifying HTTP headers"
+        ],
+        answer: "A"
+      },
+      {
+        question: "19. What is the purpose of the 'Content Security Policy' (CSP) header?",
+        options: [
+          "A) To prevent XSS attacks by restricting the sources of executable scripts",
+          "B) To encrypt web traffic",
+          "C) To block SQL injection attacks",
+          "D) To prevent directory traversal attacks"
+        ],
+        answer: "A"
+      },
+      {
+        question: "20. Which of the following is NOT a phase of a web penetration test?",
+        options: [
+          "A) Reconnaissance",
+          "B) Exploitation",
+          "C) Reporting",
+          "D) Debugging"
+        ],
+        answer: "D"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const quizContainer = document.getElementById("quiz");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultDiv = document.getElementById("result");
+    const tryAgainBtn = document.getElementById("try-again-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+
+    function displayQuestion() {
+      const question = questions[currentQuestionIndex];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <p>${question.question}</p>
+          <div class="options">
+            ${question.options.map(option => `
+              <label><input type="radio" name="q${currentQuestionIndex + 1}" value="${option[0]}"> ${option}</label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      // Show/hide buttons
+      prevBtn.classList.toggle("hide", currentQuestionIndex === 0);
+      nextBtn.classList.toggle("hide", currentQuestionIndex === questions.length - 1);
+      submitBtn.classList.toggle("hide", currentQuestionIndex !== questions.length - 1);
+    }
+
+    function nextQuestion(isSkip = false) {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (!isSkip && !selectedOption) {
+        alert("Please select an option or click Skip!");
+        return;
+      }
+
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+      showResult();
+    }
+
+    function showResult() {
+      quizContainer.innerHTML = "";
+      prevBtn.classList.add("hide");
+      nextBtn.classList.add("hide");
+      skipBtn.classList.add("hide");
+      submitBtn.classList.add("hide");
+      resultDiv.innerHTML = `You scored ${score} out of ${questions.length}. ${score >= 15 ? "🎉 Congratulations!" : "😢 Better luck next time!"}`;
+
+      // Show "Play Again" button if the user scored 20/20, otherwise show "Try Again"
+      if (score === questions.length) {
+        playAgainBtn.classList.remove("hide");
+        tryAgainBtn.classList.add("hide");
+      } else {
+        tryAgainBtn.classList.remove("hide");
+        playAgainBtn.classList.add("hide");
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      resultDiv.innerHTML = "";
+      tryAgainBtn.classList.add("hide");
+      playAgainBtn.classList.add("hide");
+      displayQuestion();
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+</body>
+</html>
