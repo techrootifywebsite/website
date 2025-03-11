@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://raw.githubusercontent.com/techrootifywebsite/website/refs/heads/main/logo.png">
+  <title>OSI Model Quiz</title>
+  <link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>OSI Model Quiz</h1>
+    <div id="quiz">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+    <div class="btn-container">
+      <button class="prev-btn hide" id="prev-btn" onclick="prevQuestion()">Previous</button>
+      <button class="skip-btn" id="skip-btn" onclick="nextQuestion(true)">Skip</button>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next</button>
+      <button class="submit-btn hide" id="submit-btn" onclick="submitQuiz()">Submit</button>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="try-again-container">
+      <button class="try-again-btn hide" id="try-again-btn" onclick="restartQuiz()">Try Again</button>
+      <button class="play-again-btn hide" id="play-again-btn" onclick="restartQuiz()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. How many layers are there in the OSI model?",
+        options: ["A) 5", "B) 6", "C) 7", "D) 8"],
+        answer: "C"
+      },
+      {
+        question: "2. Which layer of the OSI model is responsible for physical addressing?",
+        options: ["A) Network Layer", "B) Data Link Layer", "C) Physical Layer", "D) Transport Layer"],
+        answer: "B"
+      },
+      {
+        question: "3. Which layer is responsible for routing and forwarding data packets?",
+        options: ["A) Transport Layer", "B) Network Layer", "C) Data Link Layer", "D) Session Layer"],
+        answer: "B"
+      },
+      {
+        question: "4. Which layer ensures reliable data transfer between two devices?",
+        options: ["A) Physical Layer", "B) Transport Layer", "C) Application Layer", "D) Presentation Layer"],
+        answer: "B"
+      },
+      {
+        question: "5. Which layer is responsible for encryption and decryption of data?",
+        options: ["A) Application Layer", "B) Presentation Layer", "C) Session Layer", "D) Transport Layer"],
+        answer: "B"
+      },
+      {
+        question: "6. Which layer of the OSI model deals with cables, switches, and bits?",
+        options: ["A) Data Link Layer", "B) Physical Layer", "C) Network Layer", "D) Transport Layer"],
+        answer: "B"
+      },
+      {
+        question: "7. Which layer establishes, manages, and terminates sessions between applications?",
+        options: ["A) Session Layer", "B) Transport Layer", "C) Application Layer", "D) Presentation Layer"],
+        answer: "A"
+      },
+      {
+        question: "8. Which layer provides services directly to end-user applications?",
+        options: ["A) Application Layer", "B) Presentation Layer", "C) Session Layer", "D) Transport Layer"],
+        answer: "A"
+      },
+      {
+        question: "9. Which layer is responsible for error detection and correction in the OSI model?",
+        options: ["A) Physical Layer", "B) Data Link Layer", "C) Network Layer", "D) Transport Layer"],
+        answer: "B"
+      },
+      {
+        question: "10. Which layer translates data into a format that the application layer can understand?",
+        options: ["A) Presentation Layer", "B) Session Layer", "C) Transport Layer", "D) Application Layer"],
+        answer: "A"
+      },
+      {
+        question: "11. Which layer is responsible for logical addressing (e.g., IP addresses)?",
+        options: ["A) Data Link Layer", "B) Network Layer", "C) Transport Layer", "D) Physical Layer"],
+        answer: "B"
+      },
+      {
+        question: "12. Which layer is responsible for flow control and error recovery?",
+        options: ["A) Transport Layer", "B) Network Layer", "C) Data Link Layer", "D) Session Layer"],
+        answer: "A"
+      },
+      {
+        question: "13. Which layer is responsible for MAC addressing?",
+        options: ["A) Network Layer", "B) Data Link Layer", "C) Physical Layer", "D) Transport Layer"],
+        answer: "B"
+      },
+      {
+        question: "14. Which layer is responsible for converting data into signals for transmission?",
+        options: ["A) Physical Layer", "B) Data Link Layer", "C) Network Layer", "D) Transport Layer"],
+        answer: "A"
+      },
+      {
+        question: "15. Which layer is responsible for end-to-end communication and data integrity?",
+        options: ["A) Transport Layer", "B) Network Layer", "C) Data Link Layer", "D) Session Layer"],
+        answer: "A"
+      },
+      {
+        question: "16. Which layer is responsible for managing device authentication and authorization?",
+        options: ["A) Application Layer", "B) Presentation Layer", "C) Session Layer", "D) Transport Layer"],
+        answer: "A"
+      },
+      {
+        question: "17. Which layer is responsible for breaking data into segments?",
+        options: ["A) Transport Layer", "B) Network Layer", "C) Data Link Layer", "D) Physical Layer"],
+        answer: "A"
+      },
+      {
+        question: "18. Which layer is responsible for synchronizing communication between devices?",
+        options: ["A) Session Layer", "B) Transport Layer", "C) Presentation Layer", "D) Application Layer"],
+        answer: "A"
+      },
+      {
+        question: "19. Which layer is responsible for compression and decompression of data?",
+        options: ["A) Presentation Layer", "B) Application Layer", "C) Session Layer", "D) Transport Layer"],
+        answer: "A"
+      },
+      {
+        question: "20. Which layer is responsible for framing in the OSI model?",
+        options: ["A) Physical Layer", "B) Data Link Layer", "C) Network Layer", "D) Transport Layer"],
+        answer: "B"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const quizContainer = document.getElementById("quiz");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultDiv = document.getElementById("result");
+    const tryAgainBtn = document.getElementById("try-again-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+
+    function displayQuestion() {
+      const question = questions[currentQuestionIndex];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <p>${question.question}</p>
+          <div class="options">
+            ${question.options.map(option => `
+              <label><input type="radio" name="q${currentQuestionIndex + 1}" value="${option[0]}"> ${option}</label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      // Show/hide buttons
+      prevBtn.classList.toggle("hide", currentQuestionIndex === 0);
+      nextBtn.classList.toggle("hide", currentQuestionIndex === questions.length - 1);
+      submitBtn.classList.toggle("hide", currentQuestionIndex !== questions.length - 1);
+    }
+
+    function nextQuestion(isSkip = false) {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (!isSkip && !selectedOption) {
+        alert("Please select an option or click Skip!");
+        return;
+      }
+
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+      showResult();
+    }
+
+    function showResult() {
+      quizContainer.innerHTML = "";
+      prevBtn.classList.add("hide");
+      nextBtn.classList.add("hide");
+      skipBtn.classList.add("hide");
+      submitBtn.classList.add("hide");
+      resultDiv.innerHTML = `You scored ${score} out of ${questions.length}. ${score >= 15 ? "🎉 Congratulations!" : "😢 Better luck next time!"}`;
+
+      // Show "Play Again" button if the user scored 20/20, otherwise show "Try Again"
+      if (score === questions.length) {
+        playAgainBtn.classList.remove("hide");
+        tryAgainBtn.classList.add("hide");
+      } else {
+        tryAgainBtn.classList.remove("hide");
+        playAgainBtn.classList.add("hide");
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      resultDiv.innerHTML = "";
+      tryAgainBtn.classList.add("hide");
+      playAgainBtn.classList.add("hide");
+      displayQuestion();
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://raw.githubusercontent.com/techrootifywebsite/website/refs/heads/main/logo.png">
+  <title>Networking Quiz</title>
+  <link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Networking Quiz</h1>
+    <div id="quiz">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+    <div class="btn-container">
+      <button class="prev-btn hide" id="prev-btn" onclick="prevQuestion()">Previous</button>
+      <button class="skip-btn" id="skip-btn" onclick="nextQuestion(true)">Skip</button>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next</button>
+      <button class="submit-btn hide" id="submit-btn" onclick="submitQuiz()">Submit</button>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="try-again-container">
+      <button class="try-again-btn hide" id="try-again-btn" onclick="restartQuiz()">Try Again</button>
+      <button class="play-again-btn hide" id="play-again-btn" onclick="restartQuiz()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. What does LAN stand for?",
+        options: [
+          "A) Local Area Network",
+          "B) Long Area Network",
+          "C) Large Area Network",
+          "D) Logical Area Network"
+        ],
+        answer: "A"
+      },
+      {
+        question: "2. Which protocol is used for sending emails?",
+        options: [
+          "A) FTP",
+          "B) SMTP",
+          "C) HTTP",
+          "D) TCP"
+        ],
+        answer: "B"
+      },
+      {
+        question: "3. What is the primary function of a router?",
+        options: [
+          "A) To connect devices within a LAN",
+          "B) To forward data between different networks",
+          "C) To provide wireless connectivity",
+          "D) To store data"
+        ],
+        answer: "B"
+      },
+      {
+        question: "4. Which layer of the OSI model is responsible for error detection and correction?",
+        options: [
+          "A) Physical Layer",
+          "B) Data Link Layer",
+          "C) Network Layer",
+          "D) Transport Layer"
+        ],
+        answer: "B"
+      },
+      {
+        question: "5. What is the default port number for HTTP?",
+        options: [
+          "A) 21",
+          "B) 25",
+          "C) 80",
+          "D) 443"
+        ],
+        answer: "C"
+      },
+      {
+        question: "6. Which device operates at the Data Link Layer of the OSI model?",
+        options: [
+          "A) Router",
+          "B) Switch",
+          "C) Hub",
+          "D) Repeater"
+        ],
+        answer: "B"
+      },
+      {
+        question: "7. What does DNS stand for?",
+        options: [
+          "A) Domain Name System",
+          "B) Dynamic Network Service",
+          "C) Data Network System",
+          "D) Domain Network Service"
+        ],
+        answer: "A"
+      },
+      {
+        question: "8. Which IP address is reserved for loopback?",
+        options: [
+          "A) 192.168.1.1",
+          "B) 127.0.0.1",
+          "C) 10.0.0.1",
+          "D) 172.16.0.1"
+        ],
+        answer: "B"
+      },
+      {
+        question: "9. What is the purpose of NAT (Network Address Translation)?",
+        options: [
+          "A) To encrypt data",
+          "B) To map private IP addresses to a public IP address",
+          "C) To assign IP addresses dynamically",
+          "D) To resolve domain names"
+        ],
+        answer: "B"
+      },
+      {
+        question: "10. Which protocol is used for secure communication over a network?",
+        options: [
+          "A) HTTP",
+          "B) FTP",
+          "C) HTTPS",
+          "D) SMTP"
+        ],
+        answer: "C"
+      },
+      {
+        question: "11. What is the maximum speed of a standard Ethernet network?",
+        options: [
+          "A) 10 Mbps",
+          "B) 100 Mbps",
+          "C) 1 Gbps",
+          "D) 10 Gbps"
+        ],
+        answer: "C"
+      },
+      {
+        question: "12. Which of the following is a private IP address range?",
+        options: [
+          "A) 192.168.1.1",
+          "B) 8.8.8.8",
+          "C) 172.15.1.1",
+          "D) 169.254.1.1"
+        ],
+        answer: "A"
+      },
+      {
+        question: "13. What is the purpose of ARP (Address Resolution Protocol)?",
+        options: [
+          "A) To resolve domain names to IP addresses",
+          "B) To map IP addresses to MAC addresses",
+          "C) To encrypt data packets",
+          "D) To assign IP addresses dynamically"
+        ],
+        answer: "B"
+      },
+      {
+        question: "14. Which protocol is used for file transfer?",
+        options: [
+          "A) HTTP",
+          "B) FTP",
+          "C) SMTP",
+          "D) SNMP"
+        ],
+        answer: "B"
+      },
+      {
+        question: "15. What is the primary function of a firewall?",
+        options: [
+          "A) To connect multiple networks",
+          "B) To block unauthorized access to a network",
+          "C) To assign IP addresses",
+          "D) To resolve domain names"
+        ],
+        answer: "B"
+      },
+      {
+        question: "16. Which of the following is a Class C IP address?",
+        options: [
+          "A) 10.0.0.1",
+          "B) 172.16.0.1",
+          "C) 192.168.1.1",
+          "D) 169.254.1.1"
+        ],
+        answer: "C"
+      },
+      {
+        question: "17. What is the purpose of DHCP (Dynamic Host Configuration Protocol)?",
+        options: [
+          "A) To resolve domain names",
+          "B) To assign IP addresses dynamically",
+          "C) To encrypt data packets",
+          "D) To map IP addresses to MAC addresses"
+        ],
+        answer: "B"
+      },
+      {
+        question: "18. Which protocol is used for network management?",
+        options: [
+          "A) HTTP",
+          "B) FTP",
+          "C) SNMP",
+          "D) SMTP"
+        ],
+        answer: "C"
+      },
+      {
+        question: "19. What is the purpose of ICMP (Internet Control Message Protocol)?",
+        options: [
+          "A) To send error messages and operational information",
+          "B) To transfer files over a network",
+          "C) To resolve domain names",
+          "D) To encrypt data packets"
+        ],
+        answer: "A"
+      },
+      {
+        question: "20. Which of the following is a wireless networking standard?",
+        options: [
+          "A) Ethernet",
+          "B) Wi-Fi",
+          "C) Token Ring",
+          "D) FDDI"
+        ],
+        answer: "B"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const quizContainer = document.getElementById("quiz");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultDiv = document.getElementById("result");
+    const tryAgainBtn = document.getElementById("try-again-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+
+    function displayQuestion() {
+      const question = questions[currentQuestionIndex];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <p>${question.question}</p>
+          <div class="options">
+            ${question.options.map(option => `
+              <label><input type="radio" name="q${currentQuestionIndex + 1}" value="${option[0]}"> ${option}</label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      // Show/hide buttons
+      prevBtn.classList.toggle("hide", currentQuestionIndex === 0);
+      nextBtn.classList.toggle("hide", currentQuestionIndex === questions.length - 1);
+      submitBtn.classList.toggle("hide", currentQuestionIndex !== questions.length - 1);
+    }
+
+    function nextQuestion(isSkip = false) {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (!isSkip && !selectedOption) {
+        alert("Please select an option or click Skip!");
+        return;
+      }
+
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+      showResult();
+    }
+
+    function showResult() {
+      quizContainer.innerHTML = "";
+      prevBtn.classList.add("hide");
+      nextBtn.classList.add("hide");
+      skipBtn.classList.add("hide");
+      submitBtn.classList.add("hide");
+      resultDiv.innerHTML = `You scored ${score} out of ${questions.length}. ${score >= 15 ? "🎉 Congratulations!" : "😢 Better luck next time!"}`;
+
+      // Show "Play Again" button if the user scored 20/20, otherwise show "Try Again"
+      if (score === questions.length) {
+        playAgainBtn.classList.remove("hide");
+        tryAgainBtn.classList.add("hide");
+      } else {
+        tryAgainBtn.classList.remove("hide");
+        playAgainBtn.classList.add("hide");
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      resultDiv.innerHTML = "";
+      tryAgainBtn.classList.add("hide");
+      playAgainBtn.classList.add("hide");
+      displayQuestion();
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+</body>
+</html>
