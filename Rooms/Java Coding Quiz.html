@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://raw.githubusercontent.com/techrootifywebsite/website/refs/heads/main/logo.png">
+  <title>Java Coding Quiz</title>
+  <link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Java Coding Quiz</h1>
+    <div id="quiz">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+    <div class="btn-container">
+      <button class="prev-btn hide" id="prev-btn" onclick="prevQuestion()">Previous</button>
+      <button class="skip-btn" id="skip-btn" onclick="nextQuestion(true)">Skip</button>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next</button>
+      <button class="submit-btn hide" id="submit-btn" onclick="submitQuiz()">Submit</button>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="try-again-container">
+      <button class="try-again-btn hide" id="try-again-btn" onclick="restartQuiz()">Try Again</button>
+      <button class="play-again-btn hide" id="play-again-btn" onclick="restartQuiz()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. What is the correct syntax to declare a variable in Java?",
+        options: ["A) variable int x;", "B) int x;", "C) x = int;", "D) int = x;"],
+        answer: "B"
+      },
+      {
+        question: "2. Which keyword is used to create an object in Java?",
+        options: ["A) class", "B) new", "C) object", "D) create"],
+        answer: "B"
+      },
+      {
+        question: "3. What is the default value of an uninitialized `int` variable in Java?",
+        options: ["A) 0", "B) null", "C) 1", "D) Garbage value"],
+        answer: "A"
+      },
+      {
+        question: "4. Which of the following is NOT a valid Java access modifier?",
+        options: ["A) public", "B) private", "C) protected", "D) extern"],
+        answer: "D"
+      },
+      {
+        question: "5. What is the output of `System.out.println(5 + \"5\");`?",
+        options: ["A) 10", "B) 55", "C) \"55\"", "D) Compilation error"],
+        answer: "B"
+      },
+      {
+        question: "6. Which method is the entry point of a Java program?",
+        options: ["A) start()", "B) main()", "C) init()", "D) run()"],
+        answer: "B"
+      },
+      {
+        question: "7. What is the size of the `int` data type in Java?",
+        options: ["A) 2 bytes", "B) 4 bytes", "C) 8 bytes", "D) Depends on the JVM"],
+        answer: "B"
+      },
+      {
+        question: "8. Which keyword is used to prevent method overriding?",
+        options: ["A) static", "B) final", "C) private", "D) sealed"],
+        answer: "B"
+      },
+      {
+        question: "9. What is the superclass of all classes in Java?",
+        options: ["A) Object", "B) Class", "C) Super", "D) Parent"],
+        answer: "A"
+      },
+      {
+        question: "10. Which collection class does NOT allow duplicate elements?",
+        options: ["A) ArrayList", "B) LinkedList", "C) HashSet", "D) Vector"],
+        answer: "C"
+      },
+      {
+        question: "11. What is the output of `System.out.println(10 == 10.0f);`?",
+        options: ["A) true", "B) false", "C) Compilation error", "D) Runtime error"],
+        answer: "A"
+      },
+      {
+        question: "12. Which keyword is used to handle exceptions in Java?",
+        options: ["A) catch", "B) throw", "C) try", "D) All of the above"],
+        answer: "D"
+      },
+      {
+        question: "13. What is the correct way to define a constant in Java?",
+        options: ["A) const int X = 5;", "B) final int X = 5;", "C) static int X = 5;", "D) constant int X = 5;"],
+        answer: "B"
+      },
+      {
+        question: "14. Which loop is guaranteed to execute at least once?",
+        options: ["A) for", "B) while", "C) do-while", "D) None"],
+        answer: "C"
+      },
+      {
+        question: "15. What does the `static` keyword mean in Java?",
+        options: ["A) Belongs to an instance", "B) Belongs to the class", "C) Cannot be changed", "D) Thread-safe"],
+        answer: "B"
+      },
+      {
+        question: "16. Which of the following is NOT a primitive data type in Java?",
+        options: ["A) int", "B) float", "C) String", "D) boolean"],
+        answer: "C"
+      },
+      {
+        question: "17. What is the output of `System.out.println(9 / 2);`?",
+        options: ["A) 4.5", "B) 4", "C) 5", "D) Compilation error"],
+        answer: "B"
+      },
+      {
+        question: "18. Which interface is used to implement multithreading in Java?",
+        options: ["A) Serializable", "B) Runnable", "C) Cloneable", "D) Comparable"],
+        answer: "B"
+      },
+      {
+        question: "19. What is method overloading in Java?",
+        options: ["A) Same name, different parameters", "B) Redefining in subclass", "C) Same name in different classes", "D) Faster execution"],
+        answer: "A"
+      },
+      {
+        question: "20. What is the correct way to compare two strings in Java?",
+        options: ["A) str1 == str2", "B) str1.equals(str2)", "C) str1.compare(str2)", "D) str1 = str2"],
+        answer: "B"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const quizContainer = document.getElementById("quiz");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultDiv = document.getElementById("result");
+    const tryAgainBtn = document.getElementById("try-again-btn");
+    const playAgainBtn = document.getElementById("play-again-btn");
+
+    function displayQuestion() {
+      const question = questions[currentQuestionIndex];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <p>${question.question}</p>
+          <div class="options">
+            ${question.options.map(option => `
+              <label><input type="radio" name="q${currentQuestionIndex + 1}" value="${option[0]}"> ${option}</label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      // Show/hide buttons
+      prevBtn.classList.toggle("hide", currentQuestionIndex === 0);
+      nextBtn.classList.toggle("hide", currentQuestionIndex === questions.length - 1);
+      submitBtn.classList.toggle("hide", currentQuestionIndex !== questions.length - 1);
+    }
+
+    function nextQuestion(isSkip = false) {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (!isSkip && !selectedOption) {
+        alert("Please select an option or click Skip!");
+        return;
+      }
+
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function submitQuiz() {
+      const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex + 1}"]:checked`);
+      if (selectedOption && selectedOption.value === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+      showResult();
+    }
+
+    function showResult() {
+      quizContainer.innerHTML = "";
+      prevBtn.classList.add("hide");
+      nextBtn.classList.add("hide");
+      skipBtn.classList.add("hide");
+      submitBtn.classList.add("hide");
+      resultDiv.innerHTML = `You scored ${score} out of ${questions.length}. ${score >= 15 ? "🎉 Congratulations!" : "😢 Better luck next time!"}`;
+
+      // Show "Play Again" button if the user scored 20/20, otherwise show "Try Again"
+      if (score === questions.length) {
+        playAgainBtn.classList.remove("hide");
+        tryAgainBtn.classList.add("hide");
+      } else {
+        tryAgainBtn.classList.remove("hide");
+        playAgainBtn.classList.add("hide");
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      resultDiv.innerHTML = "";
+      tryAgainBtn.classList.add("hide");
+      playAgainBtn.classList.add("hide");
+      displayQuestion();
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+</body>
+</html>
